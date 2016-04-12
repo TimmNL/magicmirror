@@ -35,7 +35,6 @@ function AjaxRequest() {
 function Controller() {
   var me = this;
   moment.locale(config.lang);
-  this.setConfig(this.getServerConfig());
   this.createTime(config.time);
   this.createWeather(config.weather);
   this.createSeries(config.series);
@@ -139,21 +138,24 @@ Controller.prototype.getDivElement = function(position) {
 };
 
 Controller.prototype.checkConfig = function () {
-  var newConfig = this.getServerConfig(),
-    usedConfig = this.getConfig();
-  if (newConfig != usedConfig) {
-    window.location.reload();
-  }
+  var me = this, usedConfig = this.getConfig();
+  $.ajax({
+    type: 'GET',
+    url: 'config.js',
+    async: true,
+    cache: false,
+    success: function (result) {
+      if (!usedConfig) {
+        me.setConfig(result);
+        return;
+      }
+      if (result != usedConfig) {
+        window.location.reload();
+      }
+    }
+  });
 };
 
-Controller.prototype.getServerConfig = function () {
-  var ajaxCaller = new AjaxRequest();
-  if (ajaxCaller) {
-    ajaxCaller.open('GET', 'config.js', false);
-    ajaxCaller.send();
-    return ajaxCaller.responseText;
-  }
-};
 
 Controller.prototype.setConfig = function (config) {
   this.config = config;
