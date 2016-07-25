@@ -1,6 +1,7 @@
 /**
  * Created by Tim Mulders on 11-04-16.
  */
+'use strict';
 jQuery.fn.updateWithText = function(text, speed) {
 	var dummy = $('<div/>').html(text);
 
@@ -34,7 +35,8 @@ function AjaxRequest() {
 }
 function Controller() {
   var me = this;
-  moment.locale(config.lang);
+  moment.locale(config.lang); //todo: character encoding opvragen/aanpassen (javascript iconv)
+  $.ajaxSetup({cache: false});
   this.createTime(config.time);
   this.createWeather(config.weather);
   this.createSeries(config.series);
@@ -138,8 +140,8 @@ Controller.prototype.getDivElement = function(position) {
 };
 
 Controller.prototype.checkConfig = function () {
-  var me = this, usedConfig = this.getConfig();
-  $.ajax({
+  var me = this, usedConfig = this.getConfig(),
+    xhr = $.ajax({
     type: 'GET',
     url: 'config.js',
     async: true,

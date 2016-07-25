@@ -70,7 +70,8 @@ Weather.prototype.refreshWeather = function () {
 
       me.updateHTML(currentTempHtml, '.temp');
       me.updateHTML(windHtml + sunHtml, '.windsun');
-    }, //todo: kijken of hier niet .bind(this) bij moet..
+      response = undefined;
+    },
     error: function (error) {
       console.log('error occured at current weather: '+error);
     }
@@ -81,8 +82,7 @@ Weather.prototype.refreshWeather = function () {
  * refreshes the weather forecast.
  */
 Weather.prototype.refreshWeatherForecast = function () {
-  var me = this;
-  $.ajax({
+  var me = this, xhr = $.ajax({
     data: this.getParam(),
     type: 'GET',
     dataType: 'json',
@@ -96,6 +96,9 @@ Weather.prototype.refreshWeatherForecast = function () {
       }
       table += '</table>';
       me.updateHTML(table, '.forecast');
+      xhr.abort();
+      response = null;
+      xhr = null;
     },
     error: function (error) {
       console.log('error ocured at weather forecast: '+error);

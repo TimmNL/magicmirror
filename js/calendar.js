@@ -31,18 +31,18 @@ Calendar.prototype.refreshCalendar = function () {
 Calendar.prototype.refreshEvents = function () {
   var me = this,
     url = this.getCurrentUrl();
-    new ical_parser('php/calendar.php?url='+encodeURIComponent(url), function (result) {
-      var events = me.convertEvents(result.getEvents());
-      me.addEvents(events);
-      if (me.nextCalendar()) {
-        me.refreshEvents();
-      }else{
-        me.updateCalendar();
-        setTimeout(function () {
-          me.refreshCalendar();
-        }, 60000); // minute
-      }
-    });
+  new ical_parser('php/calendar.php?url='+encodeURIComponent(url), function (result) {
+    var events = me.convertEvents(result.getEvents());
+    me.addEvents(events);
+    if (me.nextCalendar()) {
+      me.refreshEvents();
+    }else{
+      me.updateCalendar();
+      setTimeout(function () {
+        me.refreshCalendar();
+      }, 60000); // minute
+    }
+  });
 };
 
 /**
@@ -127,9 +127,9 @@ Calendar.prototype.convertEvents = function (events) {
 
     if (seconds >=0) {
       if (seconds <= 18000 || seconds >= 172800) {
-        timeLeft = moment(startDate).fromNow();
+        timeLeft = this.replaceWeirdSymbols(moment(startDate).fromNow());
       }else {
-        timeLeft = moment(startDate).calendar();
+        timeLeft = this.replaceWeirdSymbols(moment(startDate).calendar());
       }
       endList.push({
         description: description,
@@ -170,9 +170,9 @@ Calendar.prototype.convertEvents = function (events) {
         startDate = moment(dt);
         if (seconds >=0) {
           if (seconds <= 18000 || seconds >= 172800) {
-            timeLeft = moment(dt).fromNow();
+            timeLeft = this.replaceWeirdSymbols(moment(dt).fromNow());
           }else {
-            timeLeft = moment(dt).calendar();
+            timeLeft = this.replaceWeirdSymbols(moment(dt).calendar());
           }
           endList.push({
             description: description,
@@ -221,6 +221,10 @@ Calendar.prototype.updateCalendar = function () {
     table += '</table>';
     this.updateElementHTML(table);
   }
+};
+
+Calendar.prototype.replaceWeirdSymbols = function (string) {
+  return string.replace(/Ã©/g, '&#233;');
 };
 
 Calendar.prototype.addEvents = function (events) {

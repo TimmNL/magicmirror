@@ -15,8 +15,8 @@ Series.prototype.init = function (config) {
 };
 
 Series.prototype.getShows = function () {
-  var me = this;
-  $.ajax({
+  var me = this,
+    xhr = $.ajax({
     type: 'GET',
     contentType: 'jsonp',
     dataType: 'jsonp',
@@ -30,6 +30,9 @@ Series.prototype.getShows = function () {
       }
       me.setCheckedShows(0);
       me.setTotalShows(i);
+      xhr.abort();
+      response = null;
+      xhr = null;
     },
     error: function () {
       me.getShows();
