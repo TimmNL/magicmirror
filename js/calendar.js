@@ -224,7 +224,8 @@ Calendar.prototype.updateCalendar = function () {
 };
 
 Calendar.prototype.replaceWeirdSymbols = function (string) {
-  return string.replace(/Ã©/g, '&#233;');
+  return decodeURIComponent(escape(string));
+  //return string.replace(/Ã©/g, '&#233;');
 };
 
 Calendar.prototype.addEvents = function (events) {
