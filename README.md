@@ -59,6 +59,13 @@ To see your plans for the next couple of days you can add the following variable
   - `symbol` The symbol that needs to be displayed. You’ll need to fill in the name of the symbol given by **font-awesome**
   - `url` The url of the calendar. iCloud calendar is supported by default. Google calendar should be supported as well, but is not tested yet.
 
+### Trello
+Want to check your Trello todo list? To see what you planned to do for the next couple of days you can add the following variables:
+ - `maxAmount` This limits the amount of cards that are shown on the mirror.
+ - `name` A name that will be shown at the top of the list.
+ - `api` The API key, which will need to be provided by the user. To get your api please visit [Trello](https://trello.com/app-key).
+ - `refreshTime` The amount of **seconds** that the list needs to be refreshed. It's default is a minute.
+
 ## Position
 
 Every variable in the config file will need a `position`. There are the following positions in the index.html: **top left**, **top right**, **center**, **bottom left** and **bottom right**.
