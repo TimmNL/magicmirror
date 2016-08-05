@@ -33,6 +33,7 @@ function AjaxRequest() {
   else
     return false;
 }
+
 function Controller() {
   var me = this;
   moment.locale(config.lang); //todo: character encoding opvragen/aanpassen (javascript iconv)
@@ -41,6 +42,7 @@ function Controller() {
   this.createWeather(config.weather);
   this.createSeries(config.series);
   this.createCalendar(config.calendar);
+  this.createTrello(config.trello);
   setInterval(function () {
     me.checkConfig();
   }, 5000);
@@ -73,7 +75,15 @@ Controller.prototype.createSeries = function (series) {
 Controller.prototype.createCalendar = function (calendars) {
   for (var i = 0; i < calendars.length; i++) {
     if (calendars[i].position && calendars[i].maximumEntries && calendars[i].urls.length > 0) {
-      this.createCalendarComponent(calendars[i].maximumEntries, calendars[i].urls, calendars[i].position);
+      this.createCalendarComponent(calendars[i].maximumEntries, calendars[i].urls, calendars[i].position, calendars[i].name);
+    }
+  }
+};
+
+Controller.prototype.createTrello = function (trellos) {
+  for (var i = 0; i < trellos.length; i++) {
+    if (trellos[i].api && trellos[i].boards.length > 0 && trellos[i].position) {
+      this.createTrelloComponent(trellos[i].maxAmount, trellos[i].api, trellos[i].name, trellos[i].position, trellos[i].refreshTime);
     }
   }
 };
@@ -114,9 +124,14 @@ Controller.prototype.createSerieComponent = function (api, port, position, url) 
   new Series({api: api, url: url, port: port, div: element});
 };
 
-Controller.prototype.createCalendarComponent = function (maximum, urls, position) {
+Controller.prototype.createCalendarComponent = function (maximum, urls, position, name) {
   var element = this.getDivElement(position);
-  new Calendar({div: element, calendars: urls, maxAmount: maximum});
+  new Calendar({div: element, calendars: urls, maxAmount: maximum, name: name});
+};
+
+Controller.prototype.createTrelloComponent = function (maxAmount, api, name, position, time) {
+  var element = this.getDivElement(position);
+  new TrelloDues({name: name, maxAmount: maxAmount, api: api, div: element, refreshTime: time});
 };
 
 Controller.prototype.getDivElement = function(position) {

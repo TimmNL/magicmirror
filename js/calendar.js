@@ -18,6 +18,7 @@ Calendar.prototype.init = function (config) {
   this.setCalendars(config.calendars);
   this.setMaxAmount(config.maxAmount);
   this.setElement(config.div);
+  this.setName(config.name ? config.name : '');
   this.refreshCalendar();
 };
 
@@ -192,7 +193,8 @@ Calendar.prototype.convertEvents = function (events) {
 Calendar.prototype.updateCalendar = function () {
   var events = this.getEvents(),
     opacity = 1, isNew = true,
-    table = '<table class="xsmall calendar-table">';
+    table = '<span class="title">' + this.getName() + '</span>' +
+            '<table class="xsmall calendar-table">';
   events = events.sort(function(a,b){return a.seconds- b.seconds});
   events = events.slice(0, this.getMaxAmount());
 
@@ -271,6 +273,14 @@ Calendar.prototype.setCurrentUrl = function (url) {
 
 Calendar.prototype.getCurrentUrl = function () {
   return this.url;
+};
+
+Calendar.prototype.setName = function (name) {
+  this.name = name;
+};
+
+Calendar.prototype.getName = function () {
+  return this.name;
 };
 
 Calendar.prototype.setCurrentSymbol = function (symbol) {

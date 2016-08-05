@@ -191,6 +191,10 @@ html {
   font-size: 25px;
 }
 
+.title{
+  font-size: 25px;
+}
+
 .series td{
   padding-right: 25px;
 }
@@ -209,6 +213,17 @@ html {
 }
 
 .calendar-table .days {
+  padding-left: 20px;
+  text-align: right;
+}
+
+.trello-table {
+  font-size: 14px;
+  line-height: 20px;
+  margin-top: 10px;
+}
+
+.trello-table .days {
   padding-left: 20px;
   text-align: right;
 }

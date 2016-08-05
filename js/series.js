@@ -11,6 +11,7 @@ Series.prototype.init = function (config) {
   this.setPort(config.port);
   this.setElement(config.div);
   this.setAiredEpisodes([]);
+  this.setFailCount(0);
   this.getShows();
 };
 
@@ -35,9 +36,21 @@ Series.prototype.getShows = function () {
       xhr = null;
     },
     error: function () {
-      me.getShows();
+      me.increaseFailCount();
+      if (me.getFailCount() < 10) {
+        me.getShows();
+        return;
+      }
+      me.setTimeOut();
     }
   });
+};
+
+Series.prototype.setTimeOut = function () {
+  var me = this;
+  setTimeout(function() {
+    me.getShows();
+  },60000);
 };
 
 Series.prototype.getLastAiredEpisode = function (showId, showName) {
@@ -105,6 +118,10 @@ Series.prototype.createShowElement = function (episode) {
   return '<tr class="show">'+show+status+'</tr>';
 };
 
+Series.prototype.increaseFailCount = function () {
+  this.setFailCount(this.getFailCount()+1);
+};
+
 Series.prototype.updateHTML = function (html) {
   $(this.getElement()).updateWithText(html, 1000);
 };
@@ -163,6 +180,14 @@ Series.prototype.setCheckedShows = function (checkedShows) {
 
 Series.prototype.getCheckedShows = function () {
   return this.checkedShows;
+};
+
+Series.prototype.setFailCount = function (failcount) {
+  this.failcount = failcount;
+};
+
+Series.prototype.getFailCount = function () {
+  return this.failcount;
 };
 
 Series.prototype.getIconObject = function () {
