@@ -38,5 +38,13 @@ var config = {
         url: '' // url of the calendar
       }
     ]
-  }]
+  }],
+  
+  trello: [{
+      position: 'bottom left',
+      name: 'Todo:',
+      api: '', //site: https://trello.com/app-key
+      refreshTime: 60, // In seconds; default 60 seconds
+      maxAmount: 10
+    }]
 }
