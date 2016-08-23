@@ -17,3 +17,9 @@ config.js
 .idea/vcs.xml
 
 .idea/webServers.xml
+
+.idea/codeStyleSettings.xml
+
+.idea/compiler.xml
+
+.idea/copyright/profiles_settings.xml

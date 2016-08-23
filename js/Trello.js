@@ -8,6 +8,7 @@ function TrelloDues(config) {
 TrelloDues.prototype.init = function (config) {
   var me = this;
   this.setApiKey(config.api);
+  this.setToken(config.token);
   this.setBoards(config.boards);
   this.setMaxAmount(config.maxAmount);
   this.setElement(config.div);
@@ -42,21 +43,29 @@ TrelloDues.prototype.loadTrelloScript = function (callback) {
 
 TrelloDues.prototype.authorize = function () {
   var me = this;
-  Trello.authorize({
-    name: this.getName(),
-    interactive: false,
-    expiration: "never",
-    success: function () {
-      me.requestUserID(function () {
-        me.refreshCards();
-        me.getDueCards();
-      });
-    },
-    error: function () {
-      me.fail();
-    },
-    scope: { write: false, read: true }
+  this.ajaxCall([{name: 'action', value:'authorize'}], function () {
+    me.refreshCards();
+  },
+  function (e) {
+    me.fail();
   });
+
+  // Trello.authorize({
+  //   name: this.getName(),
+  //   interactive: false,
+  //   persist: false,
+  //   expiration: 'never',
+  //   success: function () {
+  //     me.requestUserID(function () {
+  //       me.refreshCards();
+  //       me.getDueCards();
+  //     });
+  //   },
+  //   error: function () {
+  //     me.fail();
+  //   },
+  //   scope: { write: false, read: true }
+  // });
 };
 
 TrelloDues.prototype.requestUserID = function (callback) {
@@ -83,10 +92,9 @@ TrelloDues.prototype.refreshCards = function () {
 };
 
 TrelloDues.prototype.getDueCards = function () {
-  var me = this, resource = '/members/' + this.getTrelloUserID() + '/cards';
-  Trello.get(resource, function (cards) {
-    cards = me.filterCards(cards);
-    me.processCards(cards);
+  var me = this;
+  this.ajaxCall([{name: 'action', value:'getCards'}], function (result) {
+    me.processCards(result);
   });
 };
 
@@ -135,7 +143,7 @@ TrelloDues.prototype.filterCards = function (cards) {
 };
 
 TrelloDues.prototype.getBoardName = function (card, boardName, callback) {
-  Trello.get('/boards/'+ boardName +'/', function (board) {
+  this.ajaxCall([{name: 'action', value: 'getBoardName'}, {name: 'board_id', value: boardName}], function (board) {
     card.board = board.name;
     if (callback) {
       callback(card);
@@ -188,12 +196,43 @@ TrelloDues.prototype.replaceWeirdSymbols = function (string) {
   //return string.replace(/Ã©/g, '&#233;');
 };
 
+TrelloDues.prototype.ajaxCall = function (args, callback, error) {
+  var url = window.location.href + 'php/Trello.php?';
+  args.push({name: 'token', value: this.getToken()});
+  args.push({name: 'key', value: this.getApiKey()});
+  for (var i = 0; i < args.length; i++) {
+    url += args[i].name+'='+args[i].value+'&';
+  }
+  url = url.substr(0, url.length-1);
+  $.ajax({
+    type: 'GET',
+    contentType: 'json',
+    dataType: 'json',
+    async: false,
+    url: url,
+    success: function (result) {
+      callback(result);
+    },
+    error: function (e) {
+      error(e);
+    }
+  });
+};
+
 TrelloDues.prototype.getApiKey = function () {
   return this.api;
 };
 
 TrelloDues.prototype.setApiKey = function (api) {
   this.api = api;
+};
+
+TrelloDues.prototype.getToken = function () {
+  return this.token;
+};
+
+TrelloDues.prototype.setToken = function (token) {
+  this.token = token;
 };
 
 TrelloDues.prototype.setBoards = function (boards) {
