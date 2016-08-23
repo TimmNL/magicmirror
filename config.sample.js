@@ -1,4 +1,4 @@
-var config = {
+var config = { //change file name to config.js
   lang: 'nl',
   
   time: [{
@@ -44,6 +44,7 @@ var config = {
       position: 'bottom left',
       name: 'Todo:',
       api: '', //site: https://trello.com/app-key
+      key:'',
       refreshTime: 60, // In seconds; default 60 seconds
       maxAmount: 10
     }]
