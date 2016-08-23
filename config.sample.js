@@ -44,7 +44,7 @@ var config = { //change file name to config.js
       position: 'bottom left',
       name: 'Todo:',
       api: '', //site: https://trello.com/app-key
-      key:'',
+      token:'',
       refreshTime: 60, // In seconds; default 60 seconds
       maxAmount: 10
     }]
