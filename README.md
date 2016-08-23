@@ -64,6 +64,7 @@ Want to check your Trello todo list? To see what you planned to do for the next 
  - `maxAmount` This limits the amount of cards that are shown on the mirror.
  - `name` A name that will be shown at the top of the list.
  - `api` The API key, which will need to be provided by the user. To get your api please visit [Trello](https://trello.com/app-key).
+ - `token` The token for the application. To get this token, please visit [Trello](https://trello.com/app-key) and click **Token**. accept the application and fill in the key that is returned.
  - `refreshTime` The amount of **seconds** that the list needs to be refreshed. Its default is a minute.
 
 ## Position
