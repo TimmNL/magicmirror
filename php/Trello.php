@@ -4,9 +4,12 @@ class Client {
 	private $key;
 	private $token;
 
-	public function getAuthorisation($api_key, $token) {
-		$this->set_api_key($api_key);
-		$this->set_token($token);
+	public function __construct($key, $token) {
+		$this->key = $key;
+		$this->token = $token;
+	}
+
+	public function getAuthorisation() {
 		$user = $this->trelloGet('/1/members/me');
 		if (!isset($user)) {
 			return false;
@@ -15,9 +18,7 @@ class Client {
 		return true;
 	}
 
-	public function getCards($api_key, $token) {
-		$this->set_api_key($api_key);
-		$this->set_token($token);
+	public function getCards() {
 		$cards = $this->trelloGet('/1/members/me/cards');
 		if (!isset($cards)) {
 			return false;
@@ -26,9 +27,7 @@ class Client {
 		return $cards;
 	}
 
-	public function getBoardName($api_key, $token, $board_id) {
-		$this->set_api_key($api_key);
-		$this->set_token($token);
+	public function getBoardName($board_id) {
 		$board = $this->trelloGet('/1/boards/' . $board_id);
 		if (!isset($board)) {
 			return false;
@@ -65,19 +64,17 @@ class Client {
 }
 
 if (isset($_GET['action']) && isset($_GET['key']) && isset($_GET['token'])) {
+	$client = new Client($_GET['key'], $_GET['token']);
 	if ( $_GET['action'] == 'authorize' ) {
-		$client = new Client();
-		$client->getAuthorisation( $_GET['key'], $_GET['token'] );
+		$client->getAuthorisation();
 	}
 
 	if ( $_GET['action'] == 'getCards' ) {
-		$client = new Client();
-		$client->getCards( $_GET['key'], $_GET['token'] );
+		$client->getCards();
 	}
 
-	if ( $_GET['action'] == 'getBoardName' && $_GET['board_id']) {
-		$client = new Client();
-		$client->getBoardName( $_GET['key'], $_GET['token'], $_GET['board_id'] );
+	if ( $_GET['action'] == 'getBoardName' && isset($_GET['board_id'])) {
+		$client->getBoardName($_GET['board_id']);
 	}
 }else {
 	echo 'not all the neccesery stuff is provided.';

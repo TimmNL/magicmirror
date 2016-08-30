@@ -9,8 +9,8 @@ TrelloDues.prototype.init = function (config) {
   var me = this;
   this.setApiKey(config.api);
   this.setToken(config.token);
-  this.setBoards(config.boards);
   this.setMaxAmount(config.maxAmount);
+  this.setShowAllAssigned(config.all ? config.all : false);
   this.setElement(config.div);
   this.setName(config.name ? config.name : '');
   this.setRefreshTime(config.refreshTime ? config.refreshTime*1000 : 60000); // default minute
@@ -100,12 +100,16 @@ TrelloDues.prototype.getDueCards = function () {
 
 TrelloDues.prototype.processCards = function (cards) {
   var result = [], me = this;
+  cards = this.filterCards(cards);
   for (var i = 0; i < cards.length; i++) {
     var card = {
       title: cards[i].name,
       seconds: moment(cards[i].due).diff(moment(), 'seconds'),
-      timeLeft: this.replaceWeirdSymbols(moment(cards[i].due).fromNow()) //todo: overgebleven tijd berekenen met moment()
+      timeLeft: this.replaceWeirdSymbols(moment(cards[i].due).fromNow())
     };
+    if (this.getShowAllAssigned() && !cards[i].due) {
+      card.timeLeft = '';
+    }
     this.getBoardName(card, cards[i].idBoard, function (cardWithBoard) {
       result.push(cardWithBoard);
       if (result.length == cards.length) {
@@ -135,7 +139,7 @@ TrelloDues.prototype.processCards = function (cards) {
 TrelloDues.prototype.filterCards = function (cards) {
   var result = [];
   for (var i = 0; i < cards.length; i++) {
-    if (!cards[i].closed && cards[i].due) {
+    if (!cards[i].closed && (cards[i].due || this.getShowAllAssigned())) {
       result.push(cards[i]);
     }
   }
@@ -214,7 +218,9 @@ TrelloDues.prototype.ajaxCall = function (args, callback, error) {
       callback(result);
     },
     error: function (e) {
-      error(e);
+      if (error) {
+        error(e);
+      }
     }
   });
 };
@@ -235,12 +241,12 @@ TrelloDues.prototype.setToken = function (token) {
   this.token = token;
 };
 
-TrelloDues.prototype.setBoards = function (boards) {
-  this.boards = boards;
+TrelloDues.prototype.getShowAllAssigned = function () {
+  return this.all;
 };
 
-TrelloDues.prototype.getBoards = function () {
-  return this.boards;
+TrelloDues.prototype.setShowAllAssigned = function (all) {
+  this.all = all;
 };
 
 TrelloDues.prototype.setCards = function (cards) {

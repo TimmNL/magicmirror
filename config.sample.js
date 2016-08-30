@@ -41,11 +41,12 @@ var config = { //change file name to config.js
   }],
   
   trello: [{
-      position: 'bottom left',
-      name: 'Todo:',
-      api: '', //site: https://trello.com/app-key
-      token:'',
-      refreshTime: 60, // In seconds; default 60 seconds
-      maxAmount: 10
-    }]
+    position: 'bottom left',
+    name: 'Todo:',
+    api: '', //site: https://trello.com/app-key
+    token:'',
+    all: true, // displays all the assigned cards, not just the ones with a date.
+    refreshTime: 60, // In seconds; default 60 seconds
+    maxAmount: 10
+  }]
 }

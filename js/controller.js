@@ -83,7 +83,7 @@ Controller.prototype.createCalendar = function (calendars) {
 Controller.prototype.createTrello = function (trellos) {
   for (var i = 0; i < trellos.length; i++) {
     if (trellos[i].api && trellos[i].token && trellos[i].boards.length > 0 && trellos[i].position) {
-      this.createTrelloComponent(trellos[i].maxAmount, trellos[i].api, trellos[i].token, trellos[i].name, trellos[i].position, trellos[i].refreshTime);
+      this.createTrelloComponent(trellos[i].maxAmount, trellos[i].api, trellos[i].token, trellos[i].name, trellos[i].position, trellos[i].refreshTime, trellos[i].all);
     }
   }
 };
@@ -129,9 +129,9 @@ Controller.prototype.createCalendarComponent = function (maximum, urls, position
   new Calendar({div: element, calendars: urls, maxAmount: maximum, name: name});
 };
 
-Controller.prototype.createTrelloComponent = function (maxAmount, api, token, name, position, time) {
+Controller.prototype.createTrelloComponent = function (maxAmount, api, token, name, position, time, all) {
   var element = this.getDivElement(position);
-  new TrelloDues({name: name, maxAmount: maxAmount, api: api, token: token, div: element, refreshTime: time});
+  new TrelloDues({name: name, maxAmount: maxAmount, api: api, token: token, div: element, refreshTime: time, all: all});
 };
 
 Controller.prototype.getDivElement = function(position) {
