@@ -6,7 +6,6 @@ function TrelloDues(config) {
 }
 
 TrelloDues.prototype.init = function (config) {
-  var me = this;
   this.setApiKey(config.api);
   this.setToken(config.token);
   this.setMaxAmount(config.maxAmount);
@@ -14,31 +13,7 @@ TrelloDues.prototype.init = function (config) {
   this.setElement(config.div);
   this.setName(config.name ? config.name : '');
   this.setRefreshTime(config.refreshTime ? config.refreshTime*1000 : 60000); // default minute
-  this.loadTrelloScript(function () {
-    if (Trello) {
-      me.authorize();
-    }
-  });
-};
-
-TrelloDues.prototype.loadTrelloScript = function (callback) {
-  var scriptElement = document.createElement('script');
-  scriptElement.type = 'text/javascript';
-
-  if (scriptElement.readyState){  //IE
-    scriptElement.onreadystatechange = function () {
-      if (scriptElement.readyState == "loaded" || scriptElement.readyState == "complete") {
-        scriptElement.onreadystatechange = null;
-        callback();
-      }
-    };
-  } else {  //Others
-    scriptElement.onload = function(){
-      callback();
-    };
-  }
-  scriptElement.src = 'https://api.trello.com/1/client.js?key='+this.getApiKey();
-  document.getElementsByTagName('head')[0].appendChild(scriptElement);
+  this.authorize();
 };
 
 TrelloDues.prototype.authorize = function () {
@@ -48,33 +23,6 @@ TrelloDues.prototype.authorize = function () {
   },
   function (e) {
     me.fail();
-  });
-
-  // Trello.authorize({
-  //   name: this.getName(),
-  //   interactive: false,
-  //   persist: false,
-  //   expiration: 'never',
-  //   success: function () {
-  //     me.requestUserID(function () {
-  //       me.refreshCards();
-  //       me.getDueCards();
-  //     });
-  //   },
-  //   error: function () {
-  //     me.fail();
-  //   },
-  //   scope: { write: false, read: true }
-  // });
-};
-
-TrelloDues.prototype.requestUserID = function (callback) {
-  var me = this;
-  Trello.members.get('me', function (member) {
-    me.setTrelloUserID(member.id);
-    if (callback) {
-      callback();
-    }
   });
 };
 
@@ -110,6 +58,7 @@ TrelloDues.prototype.processCards = function (cards) {
     if (this.getShowAllAssigned() && !cards[i].due) {
       card.timeLeft = '';
     }
+
     this.getBoardName(card, cards[i].idBoard, function (cardWithBoard) {
       result.push(cardWithBoard);
       if (result.length == cards.length) {
@@ -139,7 +88,8 @@ TrelloDues.prototype.processCards = function (cards) {
 TrelloDues.prototype.filterCards = function (cards) {
   var result = [];
   for (var i = 0; i < cards.length; i++) {
-    if (!cards[i].closed && (cards[i].due || this.getShowAllAssigned())) {
+    var seconds = moment(cards[i].due).diff(moment(), 'seconds');
+    if (!cards[i].closed && ((cards[i].due && seconds > 0)|| (this.getShowAllAssigned() && !cards[i].due))) {
       result.push(cards[i]);
     }
   }
@@ -263,14 +213,6 @@ TrelloDues.prototype.setName = function (name) {
 
 TrelloDues.prototype.getName = function () {
   return this.name;
-};
-
-TrelloDues.prototype.setTrelloUserID = function (id) {
-  this.trelloUserID = id;
-};
-
-TrelloDues.prototype.getTrelloUserID = function () {
-  return this.trelloUserID;
 };
 
 TrelloDues.prototype.setMaxAmount = function (maxAmount) {

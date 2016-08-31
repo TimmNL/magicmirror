@@ -82,7 +82,7 @@ Controller.prototype.createCalendar = function (calendars) {
 
 Controller.prototype.createTrello = function (trellos) {
   for (var i = 0; i < trellos.length; i++) {
-    if (trellos[i].api && trellos[i].token && trellos[i].boards.length > 0 && trellos[i].position) {
+    if (trellos[i].api && trellos[i].token && trellos[i].position) {
       this.createTrelloComponent(trellos[i].maxAmount, trellos[i].api, trellos[i].token, trellos[i].name, trellos[i].position, trellos[i].refreshTime, trellos[i].all);
     }
   }
