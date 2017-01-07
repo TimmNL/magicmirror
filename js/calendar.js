@@ -141,9 +141,9 @@ Calendar.prototype.convertEvents = function (events) {
       });
     }else if (endSeconds > 0) {
       if (endSeconds <= 18000 || endSeconds >= 172800) {
-        timeLeft = moment(endDate).fromNow(true);
+        timeLeft = this.replaceWeirdSymbols(moment(endDate).fromNow(true));
       }else {
-        timeLeft = moment(endDate).calendar();
+        timeLeft = this.replaceWeirdSymbols(moment(endDate).calendar());
       }
       endList.push({
         description: description,
