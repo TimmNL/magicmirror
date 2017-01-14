@@ -182,8 +182,8 @@ html {
 }
 
 .hour-forecast{
-  float: left;
-  margin-left: 10px;
+  float: right;
+  margin-left: 17px;
 }
 
 .series{
