@@ -96,10 +96,13 @@ Series.prototype.addAiredEpisode = function (episode, showName) {
 Series.prototype.displayShows = function () {
   if (this.getCheckedShows() == this.getTotalShows()) {
     var episodes = this.getAiredEpisodes(),
-      element = '<table class="series">',
+      element = '<span class="title">Series</span><table class="series">',
       me = this;
     for (var i = 0; i < episodes.length; i++) {
       element += this.createShowElement(episodes[i]);
+    }
+    if (episodes.length < 1) {
+      element += '<tr class="show"><td class="show-name">No shows for today!</td></tr>';
     }
     element += '</table>';
     this.updateHTML(element);
@@ -107,7 +110,6 @@ Series.prototype.displayShows = function () {
       me.setAiredEpisodes([]);
       me.getShows();
     }, 10000);
-    //todo: display shows
   }
 };
 

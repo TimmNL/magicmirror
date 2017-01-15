@@ -188,7 +188,8 @@ html {
 
 .series{
   text-align: left;
-  font-size: 25px;
+  font-size: 14px;
+  letter-spacing: 0;
 }
 
 .title{
@@ -226,16 +227,6 @@ html {
 .trello-table .days {
   padding-left: 20px;
   text-align: right;
-}
-
-.dishwasher {
-  background-color: white;
-  color: black;
-  margin: 0 200px;
-  font-size: 60px;
-  border-radius: 1000px;
-  border-radius: 1200px;
-  display: none;
 }
 
 @font-face {
