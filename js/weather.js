@@ -116,7 +116,7 @@ Weather.prototype.refreshHourForecast = function () {
     success: function (response) {
       var opacity = 1,
         table = '<div class="hourforecast-table">';
-      for (var i = 1; i < response.list.length && i < 7; i++) {
+      for (var i = 6; i < response.list.length && i > 1; i--) {
         table += me.createHourForecastRow(response.list[i], opacity);
         opacity -= 0.155;
       }
